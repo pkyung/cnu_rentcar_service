@@ -18,13 +18,7 @@ $arr = $_POST["arr"];
 $date1 = $_POST["date1"];
 $date2 = $_POST["date2"];
 
-function buttonClick($licensePlateNo, $date1, $date2) {
-    echo $licensePlateNo;
-    $stmt = $conn -> prepare("INSERT INTO RESERVATION(LICENSEPLATENO, RESERVEDATE, STARTDATE, ENDDATE, CNO) VALUES(:licensePlateNo, TO_DATE(SYSDATE, 'YYYY.MM.DD'), :date1, :date2, :cno)");
-    $stmt -> execute(array(':date1' => $date1, ':date2' => $date2, ':licenstPlateNo' => $licensePlateNo, ':cno' => $cno));
 
-    echo "<script> alert('" . $date1 . " ~ " . $date2 . " 예약이 완료되었습니다')</script>";
-}
 
 try {
     $conn = new PDO($url, $username, $password);
@@ -67,7 +61,7 @@ for ($i = 0; $i < count($arr); $i++) {
             $result .= "<td>" . $row["RENTRATEPERDAY"] . "</td>";
             $result .= "<td>" . $row["FUEL"] . "</td>";
             $result .= "<td>" . $row["NUMBEROFSEATS"] . "</td>";
-            $result .= '<td><button type="button" onclick = 'buttonClick(' . '.$row["LICENSEPLATENO"] ."," . $date1 . "," . $date2 .)' class="btn btn-outline-secondary">예약</button></td>';
+            $result .= "<td><a class='btn btn-outline-secondary' href='rentcarreserveinsert.php?licensePlateNo={$row["LICENSEPLATENO"]}&date1={$date1}&date2={$date2}'>예약</a></td></tr>";
         }
     } else {
         $stmt = $conn->prepare("SELECT DISTINCT T.LICENSEPLATENO AS LICENSEPLATENO, CM.MODELNAME AS MODELNAME, CM.VEHICLETYPE AS VEHICLETYPE, CM.RENTRATEPERDAY AS RENTRATEPERDAY, CM.FUEL AS FUEL, CM.NUMBEROFSEATS AS NUMBEROFSEATS
@@ -90,11 +84,12 @@ for ($i = 0; $i < count($arr); $i++) {
             $result .= "<td>" . $row["RENTRATEPERDAY"] . "</td>";
             $result .= "<td>" . $row["FUEL"] . "</td>";
             $result .= "<td>" . $row["NUMBEROFSEATS"] . "</td>";
-            $result .= '<td><button type="button" onclick = 'buttonClick(". $row["LICENSEPLATENO"] . "," . $date1 . "," . $date2 . ")' class="btn btn-outline-secondary">예약</button></td>';
+            $result .= "<td><a class='btn btn-outline-secondary' href='rentcarreserveinsert.php?licensePlateNo={$row["LICENSEPLATENO"]}&date1={$date1}&date2={$date2}'>예약</a></td></tr>";
         }
     }
 }
-$result .= "</tbody></table>";
+$result .= "</tbody>";
 
 echo $result;
 ?>
+

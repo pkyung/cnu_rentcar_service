@@ -2,8 +2,8 @@ const search = document.getElementById("search");
 
 search.addEventListener("click", function() {
     const query = 'input[name="type"]:checked';
-    const date1 = document.getElementById("date1").value;
-    const date2 = document.getElementById("date2").value;
+    var date1 = document.getElementById("date1").value;
+    var date2 = document.getElementById("date2").value;
     var arr = [];
     const selectedEls = document.querySelectorAll(query);
     for (var i = 0; i < selectedEls.length; i++) {
@@ -25,6 +25,7 @@ search.addEventListener("click", function() {
         success:function(args){   
             console.log(args);
             $("#searchtable").html(args);      
+            console.log("왜 안해?");
         },   
 
     });  
