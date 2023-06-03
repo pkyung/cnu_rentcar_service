@@ -12,9 +12,19 @@ $tns = "
 $url = "oci:dbname=".$tns.";charset=utf8";
 $username = 'd202102682';
 $password = 'wp4wldur4';
+
+
 $arr = $_POST["arr"];
 $date1 = $_POST["date1"];
 $date2 = $_POST["date2"];
+
+function buttonClick($licensePlateNo, $date1, $date2) {
+    echo $licensePlateNo;
+    $stmt = $conn -> prepare("INSERT INTO RESERVATION(LICENSEPLATENO, RESERVEDATE, STARTDATE, ENDDATE, CNO) VALUES(:licensePlateNo, TO_DATE(SYSDATE, 'YYYY.MM.DD'), :date1, :date2, :cno)");
+    $stmt -> execute(array(':date1' => $date1, ':date2' => $date2, ':licenstPlateNo' => $licensePlateNo, ':cno' => $cno));
+
+    echo "<script> alert('" . $date1 . " ~ " . $date2 . " 예약이 완료되었습니다')</script>";
+}
 
 try {
     $conn = new PDO($url, $username, $password);
@@ -31,20 +41,57 @@ $result = "<thead>
                     <th>rent Rate Per Day</th>
                     <th>fuel</th>
                     <th>number of seats</th>
+                    <th>예약</th>
                 </tr>
             </thead>
             <tbody>";
 
-for ($i = 0; $i < count($arr) - 1; $i++) {
-    $stmt = $conn->prepare("SELECT R.LICENSEPLATENO AS LICENSEPLATENO, CM.MODELNAME AS MODELNAME, CM.VEHICLETYPE AS VEHICLETYPE, CM.RENTRATEPERDAY AS RENTRATEPERDAY, CM.FUEL AS FUEL, CM.NUMBEROFSEATS AS NUMBEROFSEATS FROM CARMODEL CM, RENTCAR R WHERE CM.MODELNAME = R.MODELNAME AND CM.VEHICLETYPE LIKE ?");
-    $stmt->execute(array($arr[$i]));
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $result .= "<tr><td>" . $row["LICENSEPLATENO"] . "</td>";
-        $result .= "<td>" . $row["MODELNAME"] . "</td>";
-        $result .= "<td>" . $row["VEHICLETYPE"] . "</td>";
-        $result .= "<td>" . $row["RENTRATEPERDAY"] . "</td>";
-        $result .= "<td>" . $row["FUEL"] . "</td>";
-        $result .= "<td>" . $row["NUMBEROFSEATS"] . "</td></tr>";
+for ($i = 0; $i < count($arr); $i++) {
+    if ($arr[$i] == '전체') {
+        $stmt = $conn->prepare("SELECT DISTINCT T.LICENSEPLATENO AS LICENSEPLATENO, CM.MODELNAME AS MODELNAME, CM.VEHICLETYPE AS VEHICLETYPE, CM.RENTRATEPERDAY AS RENTRATEPERDAY, CM.FUEL AS FUEL, CM.NUMBEROFSEATS AS NUMBEROFSEATS
+        FROM (
+            SELECT RC.LICENSEPLATENO, RC.MODELNAME
+            FROM RENTCAR RC FULL OUTER JOIN RESERVATION R
+            ON RC.LICENSEPLATENO = R.LICENSEPLATENO
+            WHERE ((TO_DATE(:date1) < R.STARTDATE OR TO_DATE(:date2) > R.ENDDATE)
+            OR R.STARTDATE IS NULL)
+            AND ((TO_DATE(:date1) < RC.DATERENTED OR TO_DATE(:date2) > RC.RETURNDATE)
+            OR RC.DATERENTED IS NULL)
+        ) T, CARMODEL CM
+        WHERE CM.MODELNAME = T.MODELNAME");
+        $stmt->execute(array(':date1' => $date1, ':date2' => $date2));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result .= "<tr><td>" . $row["LICENSEPLATENO"] . "</td>";
+            $result .= "<td>" . $row["MODELNAME"] . "</td>";
+            $result .= "<td>" . $row["VEHICLETYPE"] . "</td>";
+            $result .= "<td>" . $row["RENTRATEPERDAY"] . "</td>";
+            $result .= "<td>" . $row["FUEL"] . "</td>";
+            $result .= "<td>" . $row["NUMBEROFSEATS"] . "</td>";
+            $result .= '<td><button type="button" onclick = 'buttonClick(' . '.$row["LICENSEPLATENO"] ."," . $date1 . "," . $date2 .)' class="btn btn-outline-secondary">예약</button></td>';
+        }
+    } else {
+        $stmt = $conn->prepare("SELECT DISTINCT T.LICENSEPLATENO AS LICENSEPLATENO, CM.MODELNAME AS MODELNAME, CM.VEHICLETYPE AS VEHICLETYPE, CM.RENTRATEPERDAY AS RENTRATEPERDAY, CM.FUEL AS FUEL, CM.NUMBEROFSEATS AS NUMBEROFSEATS
+        FROM (
+            SELECT RC.LICENSEPLATENO, RC.MODELNAME
+            FROM RENTCAR RC FULL OUTER JOIN RESERVATION R
+            ON RC.LICENSEPLATENO = R.LICENSEPLATENO
+            WHERE ((TO_DATE(:date1) < R.STARTDATE OR TO_DATE(:date2) > R.ENDDATE)
+            OR R.STARTDATE IS NULL)
+            AND ((TO_DATE(:date1) < RC.DATERENTED OR TO_DATE(:date2) > RC.RETURNDATE)
+            OR RC.DATERENTED IS NULL)
+        ) T, CARMODEL CM
+        WHERE CM.MODELNAME = T.MODELNAME
+        AND CM.VEHICLETYPE = :arr");
+        $stmt->execute(array(':date1' => $date1, ':date2' => $date2, ':arr' => $arr[$i]));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result .= "<tr><td>" . $row["LICENSEPLATENO"] . "</td>";
+            $result .= "<td>" . $row["MODELNAME"] . "</td>";
+            $result .= "<td>" . $row["VEHICLETYPE"] . "</td>";
+            $result .= "<td>" . $row["RENTRATEPERDAY"] . "</td>";
+            $result .= "<td>" . $row["FUEL"] . "</td>";
+            $result .= "<td>" . $row["NUMBEROFSEATS"] . "</td>";
+            $result .= '<td><button type="button" onclick = 'buttonClick(". $row["LICENSEPLATENO"] . "," . $date1 . "," . $date2 . ")' class="btn btn-outline-secondary">예약</button></td>';
+        }
     }
 }
 $result .= "</tbody></table>";

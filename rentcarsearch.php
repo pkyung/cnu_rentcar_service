@@ -13,6 +13,17 @@ $url = "oci:dbname=".$tns.";charset=utf8";
 $username = 'd202102682';
 $password = 'wp4wldur4';
 
+session_start();
+$cno = $_SESSION['cno'];
+
+function buttonClick($licensePlateNo, $date1, $date2) {
+    echo $licensePlateNo;
+    $stmt = $conn -> prepare("INSERT INTO RESERVATION(LICENSEPLATENO, RESERVEDATE, STARTDATE, ENDDATE, CNO) VALUES(:licensePlateNo, TO_DATE(SYSDATE, 'YYYY.MM.DD'), :date1, :date2, :cno)");
+    $stmt -> execute(array(':date1' => $date1, ':date2' => $date2, ':licenstPlateNo' => $licensePlateNo, ':cno' => $cno));
+
+    echo "<script> alert('" . $date1 . " ~ " . $date2 . " 예약이 완료되었습니다')</script>";
+}
+
 try {
     $conn = new PDO($url, $username, $password);
 } catch (PDOException $e) {
