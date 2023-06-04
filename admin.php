@@ -66,7 +66,7 @@ try {
 <h4> 통계 자료</h4>
 <br>
 
-<h5>예약 중인 차량 내역</h5>
+<h5>대여 중인 차량 내역</h5>
 <table class="table">
 <thead>
       <tr>
