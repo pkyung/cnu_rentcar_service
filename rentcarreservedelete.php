@@ -17,8 +17,7 @@ session_start();
 $cno = $_SESSION['cno'];
 
 $licensePlateNo = $_GET["licensePlateNo"];
-$date1 = $_GET["date1"];
-$date2 = $_GET["date2"];
+$startdate = $_GET["startdate"];
 
 try {
     $conn = new PDO($url, $username, $password);
@@ -26,9 +25,11 @@ try {
     echo("에러 내용: ".$e -> getMessage());
 }
 
-$stmt = $conn -> prepare("INSERT INTO RESERVATION(LICENSEPLATENO, STARTDATE, RESERVEDATE, ENDDATE, CNO) VALUES(:licensePlateNo, :date1, TO_DATE(SYSDATE, 'YYYY.MM.DD'), :date2, :cno)");
-$stmt -> execute(array(':date1' => $date1, ':date2' => $date2, ':licensePlateNo' => $licensePlateNo, ':cno' => $cno));
+$stmt = $conn -> prepare("DELETE FROM reservation 
+WHERE reservation.licenseplateno = :licensePlateNo
+AND reservation.startdate = to_date(:startdate, 'YY/MM/DD')");
+$stmt -> execute(array(':licensePlateNo' => $licensePlateNo, ':startdate' => $startdate));
 
-echo "<script>alert('" . $date1 . " ~ " . $date2 . " 예약이 완료되었습니다')</script>";
+echo "<script>alert('차량번호 : " . $licensePlateNo . ", 대여 시작 날짜 : " . $startdate . "에 대한 예약이 취소되었습니다')</script>";
 
 ?>
