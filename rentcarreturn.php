@@ -43,10 +43,13 @@ $cname = $_SESSION["cname"];
           <a class="nav-link" href="rentcarsearch.php">rentcar search</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="rentcarreturn.php">rentcar return</a>
+          <a class="nav-link active" href="rentcarreturn.php">rentcar return</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="rentcarmypage.php">my page</a>
+          <a class="nav-link" href="rentcarmypage.php">my page</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="admin.php">root page</a>
         </li>
       </ul>
     </div>

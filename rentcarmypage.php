@@ -34,6 +34,9 @@
             <li><a id="previous" class="dropdown-item" href="#">previous</a></li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="admin.php">root page</a>
+        </li>
       </ul>
     </div>
   </div>
