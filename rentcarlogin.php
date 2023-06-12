@@ -22,6 +22,47 @@ try {
     echo("에러 내용: ".$e -> getMessage());
 }
 
+
+   // rentcar 내역 중 현재 시간보다 작은 것들은 다 이전 기록에 넣음
+   $sql1 = "INSERT INTO PREVIOUSRENTAL (LICENSEPLATENO, DATERENTED, DATERETURNED, PAYMENT, CNO)
+   SELECT RC.LICENSEPLATENO, RC.DATERENTED, RC.RETURNDATE, ((RC.RETURNDATE - RC.DATERENTED) * CM.RENTRATEPERDAY) AS PAY, RC.CNO
+   FROM RENTCAR  RC, CARMODEL CM 
+   WHERE CM.MODELNAME = RC.MODELNAME
+   AND RC.RETURNDATE < TO_DATE(SYSDATE, 'YY/MM/DD')";
+
+   // rentcar 중 현재 시간보다 작은 것들은 다 삭제
+   $sql2 = "UPDATE RENTCAR
+   SET DATERENTED = NULL,
+   RETURNDATE = NULL,
+   CNO = NULL
+   WHERE RETURNDATE < TO_DATE(SYSDATE, 'YY/MM/DD')";
+
+   //reserve 중 현재 시간에 포함된 것 가져오기
+   $sql3 = "UPDATE RENTCAR 
+   SET 
+   DATERENTED = (SELECT R.STARTDATE FROM RESERVATION R
+                   WHERE R.LICENSEPLATENO = RENTCAR.LICENSEPLATENO
+                   AND TO_DATE(STARTDATE) < TO_DATE(SYSDATE, 'YY/MM/DD')),
+   RETURNDATE = (SELECT R.ENDDATE FROM RESERVATION R 
+                   WHERE R.LICENSEPLATENO = RENTCAR.LICENSEPLATENO
+                   AND TO_DATE(STARTDATE) < TO_DATE(SYSDATE, 'YY/MM/DD')),
+   CNO = (SELECT R.CNO FROM RESERVATION R
+                   WHERE R.LICENSEPLATENO = RENTCAR.LICENSEPLATENO
+                   AND TO_DATE(STARTDATE) < TO_DATE(SYSDATE, 'YY/MM/DD'))
+   WHERE CNO IS NULL";
+
+   $sql4 = "DELETE FROM RESERVATION
+   WHERE STARTDATE < TO_DATE(SYSDATE, 'YY/MM/DD')";
+   
+   $stmt1 = $conn->prepare($sql1);
+   $stmt1->execute();
+   $stmt2 = $conn->prepare($sql2);
+   $stmt2->execute();
+   $stmt3 = $conn->prepare($sql3);
+   $stmt3->execute();
+   $stmt4 = $conn->prepare($sql4);
+   $stmt4->execute();
+
 $stmt = $conn -> prepare("SELECT CNO, PASSWD, NAME FROM CUSTOMER WHERE CNO like ?");
 $stmt -> execute(array($id));
 $row = $stmt -> fetch(PDO::FETCH_ASSOC);

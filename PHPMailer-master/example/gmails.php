@@ -1,43 +1,4 @@
 <?php
-$tns = "
-(DESCRIPTION=
-    (ADDRESS_LIST=
-        (ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))
-    )
-    (CONNECT_DATA=
-        (SERVICE_NAME=XE)
-    )
-)
-";
-$url = "oci:dbname=".$tns.";charset=utf8";
-$username = 'd202102682';
-$password = 'wp4wldur4';
-
-session_start();
-$cno = $_SESSION['cno'];
-$cname = $_SESSION['cname'];
-
-$licensePlateNo = $_GET["licensePlateNo"];
-$daterented = $_GET['daterented'];
-$returndate = $_GET['returndate'];
-$payment = $_GET['payment'];
-
-try {
-    $conn = new PDO($url, $username, $password);
-} catch (PDOException $e) {
-    echo("에러 내용: ".$e -> getMessage());
-}
-
-$stmt = $conn -> prepare("UPDATE RENTCAR SET DATERENTED=NULL, RETURNDATE=NULL, CNO=NULL WHERE LICENSEPLATENO = :licensePlateNo");
-$stmt -> execute(array(':licensePlateNo' => $licensePlateNo));
-
-$stmt = $conn -> prepare("INSERT INTO PREVIOUSRENTAL(LICENSEPLATENO, DATERENTED, DATERETURNED, PAYMENT, CNO) VALUES(:licensePlateNo, TO_DATE(:daterented), TO_DATE(:returndate), :payment, :cno)");
-$stmt -> execute(array(':daterented' => $daterented, ':returndate' => $returndate, ':licensePlateNo' => $licensePlateNo, ':cno' => $cno, ":payment" => $payment));
-
-echo "<script>alert('" . $payment . " 원 결제가 완료되었습니다')</script>";
-
-?>
-<?php
 
 /**
  * This example shows settings to use when sending via Google's Gmail servers.
@@ -47,13 +8,10 @@ echo "<script>alert('" . $payment . " 원 결제가 완료되었습니다')</scr
  */
 
 //Import PHPMailer classes into the global namespace
-use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
-require './PHPMailer-master/src/Exception.php';
-require './PHPMailer-master/src/PHPMailer.php';
-require './PHPMailer-master/src/SMTP.php';
+require '../vendor/autoload.php';
 
 //Create a new PHPMailer instance
 $mail = new PHPMailer();
@@ -85,31 +43,38 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 
 //Whether to use SMTP authentication
 $mail->SMTPAuth = true;
-$mail->CharSet    = "EUC-KR";
-$mail->CharSet = PHPMailer::CHARSET_UTF8;
-$mail->Encoding   = "base64";
+
 //Username to use for SMTP authentication - use full email address for gmail
-$mail->Username = '2dmsrud2002@gmail.com';
+$mail->Username = 'username@gmail.com';
 
 //Password to use for SMTP authentication
-$mail->Password = 'kogwilkqubuminhj';
+$mail->Password = 'yourpassword';
 
 //Set who the message is to be sent from
 //Note that with gmail you can only use your account address (same as `Username`)
 //or predefined aliases that you have configured within your account.
 //Do not use user-submitted addresses in here
-$mail->setFrom('2dmsrud2002@naver.com', 'cnu rentcar service');
+$mail->setFrom('from@example.com', 'First Last');
+
+//Set an alternative reply-to address
+//This is a good place to put user-submitted addresses
+$mail->addReplyTo('replyto@example.com', 'First Last');
 
 //Set who the message is to be sent to
-$mail->addAddress('2dmsrud2002@naver.com', $cname);
+$mail->addAddress('whoto@example.com', 'John Doe');
 
 //Set the subject line
-$mail->Subject = ('cnu rentcar service 반납 결제 완료 메일');
+$mail->Subject = 'PHPMailer GMail SMTP test';
 
 //Read an HTML message body from an external file, convert referenced images to embedded,
 //convert HTML into a basic plain-text alternative body
-$mail->msgHTML($daterented . '~' . $returndate.'동안 '. $payment . '원 결제 완료되었습니다');
+$mail->msgHTML(file_get_contents('contents.html'), __DIR__);
 
+//Replace the plain text body with one created manually
+$mail->AltBody = 'This is a plain-text message body';
+
+//Attach an image file
+$mail->addAttachment('images/phpmailer_mini.png');
 
 //send the message, check for errors
 if (!$mail->send()) {
