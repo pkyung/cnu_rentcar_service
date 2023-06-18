@@ -54,7 +54,7 @@ try {
    WHERE CNO IS NULL";
 
    $sql4 = "DELETE FROM RESERVATION
-   WHERE STARTDATE < TO_DATE(SYSDATE, 'YY/MM/DD')";
+   WHERE STARTDATE <= TO_DATE(SYSDATE, 'YY/MM/DD')";
    
    $stmt1 = $conn->prepare($sql1);
    $stmt1->execute();
