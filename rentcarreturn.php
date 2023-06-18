@@ -31,6 +31,9 @@ $cname = $_SESSION["cname"];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 <body>
+  <!--
+    navigation bar
+-->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">cnu rentcar service</a>
@@ -74,6 +77,7 @@ $cname = $_SESSION["cname"];
     </thead>
     <tbody>
       <?php
+      // cno를 통해 해당 고객의 대여 정보를 검색하여 뿌린다
         $stmt = $conn -> prepare("SELECT RC.LICENSEPLATENO AS LICENSEPLATENO, CM.MODELNAME AS MODELNAME, CM.VEHICLETYPE AS VEHICLETYPE, RC.DATERENTED AS DATERENTED, RC.RETURNDATE AS RETURNDATE, CM.RENTRATEPERDAY * (RC.RETURNDATE - RC.DATERENTED) AS RENTRATE
         FROM RENTCAR RC JOIN CARMODEL CM
         ON CM.MODELNAME = RC.MODELNAME
@@ -101,6 +105,9 @@ $cname = $_SESSION["cname"];
           <?= $row['RENTRATE'] ?>
         </td>
         <td>
+          <!--
+            버튼을 누르면 rentcarreturnquery.php로 이동하여 반납 쿼리를 실행한다
+        -->
           <a href='rentcarreturnquery.php?licensePlateNo=<?= $row['LICENSEPLATENO'] ?>&daterented=<?= $row['DATERENTED'] ?>&returndate=<?= $row['RETURNDATE'] ?>&payment=<?= $row['RENTRATE'] ?>' class="btn btn-outline-secondary">결제</a>
         </td>
       </tr>

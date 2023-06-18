@@ -1,5 +1,8 @@
 const search = document.getElementById("search");
-
+// search 버튼을 누르면 날짜 정보와 렌터가 정보를 가져오는데
+// rentcar가 전체라 하나라도 들어있으면 
+// arr에 전체 값만 넣고 rentcarsearchtable.php에 정보를 보낸다
+// 응답 처리를 잘 하면 searchtable에 정보를 뿌린다
 search.addEventListener("click", function() {
     const query = 'input[name="type"]:checked';
     var date1 = document.getElementById("date1").value;

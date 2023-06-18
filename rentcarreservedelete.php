@@ -24,7 +24,7 @@ try {
 } catch (PDOException $e) {
     echo("에러 내용: ".$e -> getMessage());
 }
-
+// licensePlateNo와 startdate를 찾아 해당 예약 정보를 취소한다
 $stmt = $conn -> prepare("DELETE FROM reservation 
 WHERE reservation.licenseplateno = :licensePlateNo
 AND reservation.startdate = to_date(:startdate, 'YY/MM/DD')");

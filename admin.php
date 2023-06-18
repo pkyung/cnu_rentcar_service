@@ -16,6 +16,7 @@ $password = 'wp4wldur4';
 session_start();
 $cname = $_SESSION['cname'];
 
+// cname이 다르면 alert를 띄우고 이전 페이지로 돌아간다
 try {
     $conn = new PDO($url, $username, $password);
     if ($cname != 'root') {
@@ -38,6 +39,9 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 <body>
+  <!--
+    navigation bar
+-->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">cnu rentcar service</a>

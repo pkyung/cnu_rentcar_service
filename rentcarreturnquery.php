@@ -27,10 +27,11 @@ try {
 } catch (PDOException $e) {
     echo("에러 내용: ".$e -> getMessage());
 }
-
+// rentcar 날짜 정보와 대여 정보를 null로 바꾼다
 $stmt = $conn -> prepare("UPDATE RENTCAR SET DATERENTED=NULL, RETURNDATE=NULL, CNO=NULL WHERE LICENSEPLATENO = :licensePlateNo");
 $stmt -> execute(array(':licensePlateNo' => $licensePlateNo));
 
+// 이전 대여 정보에 해당 결제 정보를 넣는다
 $stmt = $conn -> prepare("INSERT INTO PREVIOUSRENTAL(LICENSEPLATENO, DATERENTED, DATERETURNED, PAYMENT, CNO) VALUES(:licensePlateNo, TO_DATE(:daterented), TO_DATE(:returndate), :payment, :cno)");
 $stmt -> execute(array(':daterented' => $daterented, ':returndate' => $returndate, ':licensePlateNo' => $licensePlateNo, ':cno' => $cno, ":payment" => $payment));
 
@@ -38,7 +39,7 @@ echo "<script>alert('" . $payment . " 원 결제가 완료되었습니다')</scr
 
 ?>
 <?php
-
+// 메일 보내는 과정
 /**
  * This example shows settings to use when sending via Google's Gmail servers.
  * This uses traditional id & password authentication - look at the gmail_xoauth.phps

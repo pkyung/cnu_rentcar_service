@@ -45,6 +45,9 @@ try {
     <link href="datestyle.css" rel="stylesheet">
 </head>
 <body>
+  <!--
+    navigation bar
+-->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">cnu rentcar service</a>

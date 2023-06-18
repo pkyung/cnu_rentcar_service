@@ -25,7 +25,7 @@ try {
 } catch (PDOException $e) {
     echo("에러 내용: ".$e -> getMessage());
 }
-
+// cno와 시작일, 종료일을 예약 정보에 추가한다
 $stmt = $conn -> prepare("INSERT INTO RESERVATION(LICENSEPLATENO, STARTDATE, RESERVEDATE, ENDDATE, CNO) VALUES(:licensePlateNo, :date1, TO_DATE(SYSDATE, 'YYYY.MM.DD'), :date2, :cno)");
 $stmt -> execute(array(':date1' => $date1, ':date2' => $date2, ':licensePlateNo' => $licensePlateNo, ':cno' => $cno));
 

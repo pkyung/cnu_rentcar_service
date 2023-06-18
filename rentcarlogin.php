@@ -13,6 +13,8 @@ $url = "oci:dbname=".$tns.";charset=utf8";
 $username = 'd202102682';
 $password = 'wp4wldur4';
 
+
+// get 방식으로 id, pw받아온다
 $id = $_GET['id'] ?? '';
 $pw = $_GET['pw'] ?? '';
 
@@ -63,10 +65,12 @@ try {
    $stmt4 = $conn->prepare($sql4);
    $stmt4->execute();
 
+   // id가 cno와 같은 것 가져오기
 $stmt = $conn -> prepare("SELECT CNO, PASSWD, NAME FROM CUSTOMER WHERE CNO like ?");
 $stmt -> execute(array($id));
 $row = $stmt -> fetch(PDO::FETCH_ASSOC);
 if ($row != null) {
+    // passwd 같은지 확인하고 rentcarsearch.php 파일로 이동한다
     if ($row['PASSWD'] === $pw) {
         session_start();
         $_SESSION["cno"] = $row['CNO'];

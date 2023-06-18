@@ -36,7 +36,7 @@ $result = "<thead>
                 </tr>
             </thead>
             <tbody>";
-
+// cno를 통해 예약 정보를 찾아 result에 저장하여 뿌린다
 $stmt = $conn->prepare("SELECT R.LICENSEPLATENO, RC.MODELNAME, R.STARTDATE, R.ENDDATE, R.RESERVEDATE
 FROM RESERVATION R, RENTCAR RC
 WHERE R.LICENSEPLATENO = RC.LICENSEPLATENO

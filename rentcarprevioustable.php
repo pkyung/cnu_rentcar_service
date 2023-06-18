@@ -35,7 +35,7 @@ $result = "<thead>
             </thead>
             <tbody>";
 
-
+// cno를 통해 이전 대여 기록을 검색하여 result에 변수를 저장하여 정보를 뿌린다
 $stmt = $conn->prepare("SELECT RC.MODELNAME, P.LICENSEPLATENO, P.DATERENTED, P.DATERETURNED, P.PAYMENT
 FROM PREVIOUSRENTAL P, RENTCAR RC
 WHERE RC.LICENSEPLATENO = P.LICENSEPLATENO
