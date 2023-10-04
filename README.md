@@ -23,4 +23,6 @@
 
 
 ## 아키텍처
-<img src="https://github.com/pkyung/cnu_rentcar_service/assets/81898507/321dda86-653e-4fd7-b63d-81d07dc9cf08" style="display=block;margin=auto">
+<img src="https://github.com/pkyung/cnu_rentcar_service/assets/81898507/321dda86-653e-4fd7-b63d-81d07dc9cf08" style="display: block;
+  margin-left: auto;
+  margin-right: auto;">
