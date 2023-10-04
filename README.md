@@ -20,3 +20,7 @@
 | <img width="500" src="https://github.com/pkyung/cnu_rentcar_service/assets/81898507/5c1fa70e-24f0-4141-94ff-8b55609a8994"/>   | <img width="500" src="https://github.com/pkyung/cnu_rentcar_service/assets/81898507/7fd24099-7438-4172-bfeb-f2fc452e66dc"/>   |
 |  일반 회원 관리자 페이지 접근 불가   |   관리자 페이지   |
 | <img width="500" src="https://github.com/pkyung/cnu_rentcar_service/assets/81898507/ec3d0ba8-e295-4e5b-93c9-54651f97fd02"/>   | <img width="500" src="https://github.com/pkyung/cnu_rentcar_service/assets/81898507/3b12c016-4961-46f1-bee9-a91064fdff7d"/>   |
+
+
+## 아키텍처
+![아키텍처](https://github.com/pkyung/cnu_rentcar_service/assets/81898507/321dda86-653e-4fd7-b63d-81d07dc9cf08)
